@@ -2,7 +2,7 @@ const $=id=>document.getElementById(id);
 /* The 3 hidden words. The password for round 3 is these words together. */
 const WORDS=["i'm","perfect","and","it's","not","a","compliment"],PASSWORD=WORDS.join(" ");
 /* Edit this message: it appears under the cake at the very end. */
-const FUNNY="Happy Birthday, Yassine! Another year unlocked. Your age just updated, but your maturity is still buffering. Enjoy the cake, legend! 🎂😎";
+const FUNNY="Happy Birthday to our HERO🎂⚔️I hope this new chapter brings you a thousand reasons to smile, and all the beautiful things you secretly wish for.Your age just went up, but you'll always be the perfect yassine ^^ Stay happy, stay amazing, and keep being you. You deserve the sweetest year ever!✨";
 let player="";
 const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
