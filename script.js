@@ -342,11 +342,6 @@ function cakeSVG(){
 }
 function surprise(){
  show('s6');
-  aud.pause();
-  aud.currentTime=0;
-  activeAudio=birthdayAud;
-  birthdayAud.currentTime=0;
-  birthdayAud.play().catch(()=>{});
  $('sur').innerHTML=`<div class="sub">Round 3 complete</div><h1>Surprise!</h1><div class="cakewrap">${cakeSVG()}</div><p class="tx" id="wish">Tap the flames to blow out the candles.</p><div class="funny" id="fn"></div><div id="sb"></div>`;
  let blown=false;
  const finale=()=>{if(blown)return;blown=true;$('wish').textContent='Make a wish! ✨ Happy Birthday!';confetti(130);const r=$('cake').getBoundingClientRect();burst(r.left+r.width/2,r.top+40,60);fan()};
