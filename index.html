@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0905">
+  <title>Legend of Yassine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="music">
+    <button id="mbtn" type="button" title="Pause or play music">♪ Music on / off</button>
+  </div>
+
+  <audio id="aud" loop preload="auto"></audio>
+  <audio id="birthdayAud" loop preload="auto"></audio>
+
+  <main>
+    <section class="screen on" id="s1">
+      <div class="frame">
+        <div class="orn">✦ ✧ ✦</div>
+        <div class="sub">A birthday adventure</div>
+        <h1>Legend of Yassine</h1>
+        <p class="tx">A special mission awaits. Are you ready to enter the world beyond the walls?</p>
+        <button class="btn" id="start" type="button">Start the adventure</button>
+        <div class="orn">✦ ✧ ✦</div>
+      </div>
+    </section>
+
+    <section class="screen" id="s2">
+      <div class="frame">
+        <div class="sub">Before the mission</div>
+        <h2>Who is our soldier?</h2>
+        <p class="tx">Enter your name to begin the adventure.</p>
+        <input type="text" id="name" placeholder="Your name" autocomplete="off" maxlength="30">
+        <button class="btn" id="next" type="button" disabled>Continue</button>
+      </div>
+    </section>
+
+    <section class="screen" id="s5">
+      <div class="frame" id="st"></div>
+    </section>
+
+    <section class="screen" id="s6">
+      <div class="frame" id="sur"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
