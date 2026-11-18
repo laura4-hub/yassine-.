@@ -210,9 +210,43 @@ function password(){
  $('pw').onkeydown=e=>{if(e.key==='Enter')go()};$('pw').focus();
 }
 function giftReveal(){
- st.innerHTML=`<div class="sub">Password accepted · Surprise unlocked</div><h1 class="gift-heading">You did it!</h1><p class="tx">A very important delivery has arrived for one very special birthday boy.</p><button class="big-gift" id="bigGift" aria-label="Open your birthday gift"><span class="gift-sparkle">✦</span><span class="gift-emoji">🎁</span><span class="gift-ribbon"></span><span class="gift-caption">TAP TO OPEN</span><span class="gift-sparkle two">✧</span></button><p class="tx gift-note">Warning: contents may cause excessive smiling.</p>`;
- const g=$('bigGift');g.onclick=()=>{g.disabled=true;g.classList.add('gift-open');burst(innerWidth/2,innerHeight/2,100);fan();setTimeout(surprise,650)};
- confetti(110);
+  st.innerHTML=`<div class="sub">Password accepted · Surprise unlocked</div>
+  <h1 class="gift-heading">You did it!</h1>
+  <p class="tx">A very important delivery has arrived for one very special birthday boy.</p>
+  <button class="big-gift" id="bigGift" aria-label="Open your birthday gift">
+    <span class="gift-sparkle">✦</span>
+    <span class="gift-emoji">🎁</span>
+    <span class="gift-ribbon"></span>
+    <span class="gift-caption">TAP TO OPEN</span>
+    <span class="gift-sparkle two">✧</span>
+  </button>
+  <p class="tx gift-note">Warning: contents may cause excessive smiling.</p>`;
+
+  const g = $('bigGift');
+
+  g.onclick = () => {
+    g.disabled = true;
+    g.classList.add('gift-open');
+
+    // Stop the adventure music
+    aud.pause();
+    aud.currentTime = 0;
+
+    // Start the birthday song
+    activeAudio = birthdayAud;
+    birthdayAud.currentTime = 0;
+
+    birthdayAud.play().catch(error => {
+      console.log("Birthday music blocked:", error);
+    });
+
+    burst(innerWidth/2, innerHeight/2, 100);
+    fan();
+
+    setTimeout(surprise, 650);
+  };
+
+  confetti(110);
 }
 function forestSVG(){
  const tree=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})"><rect x="-4" y="0" width="8" height="26" fill="#1a1008"/><g fill="${c}"><polygon points="0,-62 -24,-18 24,-18"/><polygon points="0,-42 -30,2 30,2"/><polygon points="0,-20 -36,24 36,24"/></g></g>`;
