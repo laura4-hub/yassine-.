@@ -10,7 +10,7 @@ function show(id){flash();document.querySelectorAll('.screen').forEach(e=>e.clas
 // Two separate tracks: the game soundtrack and the final birthday song.
 const aud=$('aud');
 const birthdayAud=$('birthdayAud');
-aud.src='./videoplayback.weba';
+aud.src='./music.mp3';
 aud.volume=.65;
 aud.loop=true;
 birthdayAud.src='./birthday-song.mp3';
