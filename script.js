@@ -182,7 +182,7 @@ function startPenguinGame(){
   st.appendChild(btn('Continue',()=>round3()));
  }
  function update(){
-  player.vx=0;if(keys.arrowleft||keys.a)player.vx=-3.7;if(keys.arrowright||keys.d)player.vx=3.7;
+  player.vx=0;if(keys.arrowleft||keys.a)player.vx=-6.5;if(keys.arrowright||keys.d)player.vx=6.5;
   if((keys[' ']||keys.arrowup||keys.w)&&player.onGround){player.vy=-10.8;player.onGround=false}
   player.x=Math.max(0,Math.min(worldW-player.w,player.x+player.vx));
   const oldBottom=player.y+player.h;player.vy=Math.min(12,player.vy+.48);player.y+=player.vy;player.onGround=false;
