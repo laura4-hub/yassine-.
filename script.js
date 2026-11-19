@@ -171,33 +171,15 @@ function startPenguinGame(){
   for(let i=0;i<45;i++){const sx=((i*137-camera*.18)%W+W)%W;ctx.fillStyle='rgba(255,243,196,.7)';ctx.fillRect(sx,(i*53)%170,2,2)}
   ctx.save();ctx.translate(-camera,0);
   platforms.forEach(p=>{ctx.fillStyle='#173c35';ctx.fillRect(p.x,p.y,p.w,H-p.y);ctx.fillStyle='#d4a84b';ctx.fillRect(p.x,p.y,p.w,5)});
-  stars.forEach((s,i)=>{
-   if(s.got)return;
-   const bob=Math.sin(performance.now()/220+i)*4;
-   ctx.save();ctx.translate(s.x,s.y+bob);
-   // The secret word is printed directly below its matching star.
-   const word=words[i];ctx.font='bold 13px Georgia,serif';
-   const labelW=Math.max(42,ctx.measureText(word).width+14);
-   ctx.fillStyle='rgba(8,12,24,.9)';ctx.strokeStyle='#f3d98b';ctx.lineWidth=1.5;
-   ctx.beginPath();ctx.roundRect(-labelW/2,19,labelW,22,6);ctx.fill();ctx.stroke();
-   ctx.fillStyle='#fff0bd';ctx.textAlign='center';ctx.textBaseline='middle';
-   ctx.shadowColor='transparent';ctx.fillText(word,0,30);
-   ctx.shadowColor='#ffe28a';ctx.shadowBlur=18;ctx.fillStyle='#ffe28a';
-   ctx.beginPath();for(let j=0;j<10;j++){const r=j%2?7:15,a=-Math.PI/2+j*Math.PI/5;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r)}
-   ctx.closePath();ctx.fill();ctx.restore();
-  });
+  stars.forEach((s,i)=>{if(s.got)return;const bob=Math.sin(performance.now()/220+i)*4;ctx.save();ctx.translate(s.x,s.y+bob);ctx.shadowColor='#ffe28a';ctx.shadowBlur=18;ctx.fillStyle='#ffe28a';ctx.beginPath();for(let j=0;j<10;j++){const r=j%2?7:15,a=-Math.PI/2+j*Math.PI/5;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r)}ctx.closePath();ctx.fill();ctx.restore()});
   redPanda(player.x,player.y);ctx.restore();
   ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(14,12,180,8);ctx.fillStyle='#f3d98b';ctx.fillRect(14,12,180*(collected/7),8);
  }
  function finish(){
-   clean();burst(innerWidth/2,innerHeight/3,100);fan();
-   st.innerHTML=`<div class="message-art" id="messageArt">
-    <p class="secret-congrats">Congratulations! You found the secret 7 words message.</p>
-    <img class="reveal-cat" src="./cat.jfif" alt="A silly cat making a funny face">
-    <p class="final-message">i'm perfect and it's not a compliment</p>
-   </div>`;
-   setTimeout(()=>{ $('messageArt').querySelector('.reveal-cat').classList.add('pop'); burst(innerWidth/2,innerHeight/2,75); fan(); },180);
-   st.appendChild(btn('Continue',()=>round3()));
+  clean();burst(innerWidth/2,innerHeight/3,100);fan();
+  st.innerHTML=`<div class="message-art" id="messageArt"><img class="reveal-cat" src="./cat.jfif" alt="A silly cat making a funny face"><p class="final-message">i'm perfect and it's not a compliment</p></div>`;
+  setTimeout(()=>{ $('messageArt').querySelector('.reveal-cat').classList.add('pop'); burst(innerWidth/2,innerHeight/2,75); fan(); },180);
+  st.appendChild(btn('Continue',()=>round3()));
  }
  function update(){
   player.vx=0;if(keys.arrowleft||keys.a)player.vx=-3.7;if(keys.arrowright||keys.d)player.vx=3.7;
@@ -207,13 +189,13 @@ function startPenguinGame(){
   platforms.forEach(p=>{if(player.x+player.w>p.x&&player.x<p.x+p.w&&oldBottom<=p.y+8&&player.y+player.h>=p.y&&player.vy>=0){player.y=p.y-player.h;player.vy=0;player.onGround=true}});
   if(player.y>H+100){player.x=Math.max(20,player.x-120);player.y=170;player.vy=0}
   stars.forEach((s,i)=>{if(s.got)return;if(Math.hypot(player.x+player.w/2-s.x,player.y+player.h/2-s.y)<29){
-   s.got=true;collected++;count.textContent=`⭐ ${collected} / 7`;wordLine.textContent='Words collected: '+words.slice(0,collected).join('  ')+'  '+Array(7-collected).fill('_').join(' ');
+   s.got=true;collected++;count.textContent=`⭐ ${collected} / 7`;wordLine.textContent=words.slice(0,collected).join('  ')+'  '+Array(7-collected).fill('_').join(' ');
    hint.textContent=`You found: ${words[i]}! Keep jumping for the next star.`;tone(580+i*65,.22);burst(innerWidth/2,innerHeight/2,22);if(collected===7)setTimeout(finish,650);
   }});
   camera=Math.max(0,Math.min(worldW-W,player.x-W*.38));
  }
  function loop(){if(!playing)return;update();draw();raf=requestAnimationFrame(loop)}
- wordLine.textContent='Words collected: _ _ _ _ _ _ _';loop();
+ wordLine.textContent='_ _ _ _ _ _ _';loop();
 }
 
 /* ===== FINAL ROUND : password unlocks the birthday gift ===== */
