@@ -2,27 +2,53 @@ const $=id=>document.getElementById(id);
 /* The 3 hidden words. The password for round 3 is these words together. */
 const WORDS=["i'm","perfect","and","it's","not","a","compliment"],PASSWORD=WORDS.join(" ");
 /* Edit this message: it appears under the cake at the very end. */
-const FUNNY="Happy Birthday, Yassine! Another year unlocked. Your age just updated, but your maturity is still buffering. Enjoy the cake, legend! 🎂😎";
-let player="";
+const FUNNY="Happy birthday to youuuu YASSINE!! 🎂💗 I hope this new chapter of your life is filled with beautiful surprises, endless laughter, little victories and dreams coming true. May you always find reasons to smile, even on the hardest days. Never stop being the talented, funny and wonderfully unique person you are. You deserve all the happiness. Enjoy your special day! ✨🤍";
 const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 function show(id){flash();document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$(id).classList.add('on')}
-// Two separate tracks: the game soundtrack and the final birthday song.
-const aud=$('aud');
-const birthdayAud=$('birthdayAud');
-aud.src='./videoplayback.weba';
-aud.volume=.65;
-aud.loop=true;
-birthdayAud.src='./birthday-song.mp3';
-birthdayAud.volume=.75;
-birthdayAud.loop=true;
-let activeAudio=aud;
 
-function musicToggle(){
-  if(activeAudio.paused) activeAudio.play().catch(()=>{});
-  else activeAudio.pause();
+
+// ===== MUSIC SYSTEM =====
+const aud = $('aud');
+const birthdayAud = $('birthdayAud');
+
+aud.src = './music.mp3';
+aud.volume = 0.65;
+aud.loop = true;
+
+birthdayAud.src = './birthday-song.mp3';
+birthdayAud.volume = 0.75;
+birthdayAud.loop = true;
+
+let activeAudio = aud;
+
+function playTrack(track) {
+    activeAudio = track;
+
+    const otherTrack = track === aud ? birthdayAud : aud;
+    otherTrack.pause();
+
+    track.play().catch(error => {
+        console.error("Music error:", error);
+    });
 }
-$('mbtn').onclick=musicToggle;
+
+function musicToggle() {
+    if (activeAudio.paused) {
+        playTrack(activeAudio);
+    } else {
+        activeAudio.pause();
+    }
+}
+
+$('mbtn').onclick = musicToggle;
+
+$('start').onclick = () => {
+    playTrack(aud);
+    show('s2');
+    $('name').focus();
+};
+
 
 $('start').onclick=()=>{
   activeAudio=aud;
@@ -182,7 +208,7 @@ function startPenguinGame(){
   st.appendChild(btn('Continue',()=>round3()));
  }
  function update(){
-  player.vx=0;if(keys.arrowleft||keys.a)player.vx=-3.7;if(keys.arrowright||keys.d)player.vx=3.7;
+  player.vx=0;if(keys.arrowleft||keys.a)player.vx=-8;if(keys.arrowright||keys.d)player.vx=8;
   if((keys[' ']||keys.arrowup||keys.w)&&player.onGround){player.vy=-10.8;player.onGround=false}
   player.x=Math.max(0,Math.min(worldW-player.w,player.x+player.vx));
   const oldBottom=player.y+player.h;player.vy=Math.min(12,player.vy+.48);player.y+=player.vy;player.onGround=false;
@@ -306,21 +332,75 @@ function cakeSVG(){
  <text x="150" y="141" text-anchor="middle" font-family="'Cinzel',Georgia,serif" font-weight="600" font-size="15" fill="#f6ead0" textLength="90" lengthAdjust="spacingAndGlyphs">YASSINE</text>
  ${candles}</svg>`;
 }
+
 function surprise(){
- show('s6');
-  aud.pause();
-  aud.currentTime=0;
-  activeAudio=birthdayAud;
-  birthdayAud.currentTime=0;
-  birthdayAud.play().catch(()=>{});
- $('sur').innerHTML=`<div class="sub">Round 3 complete</div><h1>Surprise!</h1><div class="cakewrap">${cakeSVG()}</div><p class="tx" id="wish">Tap the flames to blow out the candles.</p><div class="funny" id="fn"></div><div id="sb"></div>`;
- let blown=false;
- const finale=()=>{if(blown)return;blown=true;$('wish').textContent='Make a wish! ✨ Happy Birthday!';confetti(130);const r=$('cake').getBoundingClientRect();burst(r.left+r.width/2,r.top+40,60);fan()};
- document.querySelectorAll('#sur .fl').forEach(f=>f.onclick=()=>{f.querySelector('.fm').classList.add('off');tone(300,.2);if(!document.querySelector('#sur .fm:not(.off)'))finale()});
- $('sb').append(btn('Blow the candles',()=>{document.querySelectorAll('#sur .fm').forEach(f=>f.classList.add('off'));finale()}),btn('Music on / off',musicToggle),btn('Play again',()=>location.reload()));
- confetti(100);
- setTimeout(()=>{const el=$('fn');let i=0;(function f(){el.textContent=FUNNY.slice(0,++i);if(i<FUNNY.length)setTimeout(f,32)})()},1500);
+    show('s6');
+
+    // Stop the normal soundtrack and start the birthday song
+    aud.pause();
+    aud.currentTime = 0;
+
+    birthdayAud.currentTime = 0;
+    playTrack(birthdayAud);
+
+    $('sur').innerHTML = `
+        <div class="sub">Round 3 complete</div>
+        <h1>Surprise!</h1>
+        <div class="cakewrap">${cakeSVG()}</div>
+        <p class="tx" id="wish">Tap the flames to blow out the candles.</p>
+        <div class="funny" id="fn"></div>
+        <div id="sb"></div>
+    `;
+
+    let blown = false;
+
+    const finale = () => {
+        if(blown) return;
+        blown = true;
+
+        $('wish').textContent = 'Make a wish! ✨ Happy Birthday!';
+        confetti(130);
+
+        const r = $('cake').getBoundingClientRect();
+        burst(r.left + r.width/2, r.top + 40, 60);
+        fan();
+    };
+
+    document.querySelectorAll('#sur .fl').forEach(f => {
+        f.onclick = () => {
+            f.querySelector('.fm').classList.add('off');
+            tone(300, .2);
+
+            if(!document.querySelector('#sur .fm:not(.off)')){
+                finale();
+            }
+        };
+    });
+
+    $('sb').append(
+        btn('Blow the candles', () => {
+            document.querySelectorAll('#sur .fm').forEach(f =>
+                f.classList.add('off')
+            );
+            finale();
+        }),
+        btn('Music on / off', musicToggle),
+        btn('Play again', () => location.reload())
+    );
+
+    confetti(100);
+
+    setTimeout(() => {
+        const el = $('fn');
+        let i = 0;
+
+        (function f(){
+            el.textContent = FUNNY.slice(0, ++i);
+            if(i < FUNNY.length) setTimeout(f, 32);
+        })();
+    }, 1500);
 }
+
 /* ===== EFFECTS ===== */
 const cv=document.createElement('canvas');cv.id='bg';document.body.prepend(cv);const cx=cv.getContext('2d');let W,H;
 function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener('resize',rs);
